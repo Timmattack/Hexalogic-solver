@@ -14,7 +14,7 @@ Mais on peut le représenter comme une simple matrice, en admettant que les case
 Les coordonnés `xy` pour un hexagone sont alors : 
 
 ```
-	00  10  20
+    00  10  20
   01  11  21  31
 02  12  22  32  42
   13  23  33  43
