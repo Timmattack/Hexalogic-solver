@@ -19,5 +19,11 @@ class Hexologic:
         return cases
     
     def __init__(self, sommes=None):
-        self.sommes = sommes if sommes else []
+        self.__sommes = sommes if sommes else []
+        self.__cases = []
+        # Répertorier les cases du problème
         
+    
+    def solve():
+        ...
+        # Renvoyer la liste des coordonnées et leur valeur
