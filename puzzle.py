@@ -1,3 +1,4 @@
+import copy
 
 class Hexologic:
     MINVAL_CASE=1
@@ -39,36 +40,61 @@ class Hexologic:
         listCases = list(dictCases.items())
         # On trie les cases par leur nombre de contraintes
         listCases.sort(reverse=True, key=lambda case : case[1])
+        # On récupère uniquement les coordonnées
+        listCases = list(map(lambda c: c[0], listCases))
         
+        # Liste de coordonnées, triées par le nombre de contrainte qu'elles ont
         return listCases
+    
+    def __initSolFromCases(self):
+        solution = {}
+        for k in self.__cases:
+            solution[k] = 0
+        
+        return solution
     
     def __init__(self, sommes=None):
         self.__sommes = sommes if sommes else []
         
         # Répertorier les cases du problème
         casesSommes = Hexologic.__getCasesFromSommes(self.__sommes)
+        
         self.__cases = Hexologic.__dictCasesToSortedList(casesSommes)
         
-        # Initialisation de la solution à 0
-        self.__solution = list(map(lambda e: {"pos": e[0], "val": 0}, self.__cases))
-
-    """
-    def solve():
+        # Initialisation des cases à 0
+        self.__solution = self.__initSolFromCases()
+    
+    
+    def solve(self):
         # Renvoyer la liste des coordonnées et leur valeur
-        if(!self.__solve(premiereCase))
+        if(!self.__solve(0))
             return {}
         else:
-            return self.__solution
+            return copy.deepcopy(self.__solution)
     
-    def __solve(i_case):
-        # if i_cases >= len(self.__cases):
-        #   Toutes les cases ont été assignées : est-ce une solution ?
-        #   return self.__checkSommes()
-        # for i in range()
-        # if checkSommes:
-        #   return True
-        # else:
-        #   
-    def __checkSommes():
+    def __solve(self, i_case):
+        if i_cases >= len(self.__cases):
+            # Toutes les cases ont été assignées : est-ce une solution ?
+            return self.__checkSommes()
         
-    """
+        case = self.__cases[i_case]
+        
+        for val in range(Hexologic.MINVAL_CASE, Hexologic.MAXVAL_CASE+1):
+            self.__solution[case] = val
+            if self.__solve(i_case+1):
+                return True
+        
+        return false   
+    
+    def __checkSommes(self):
+        for contrainte in self.__sommes:
+            if contrainte[0] != self.__sumOfCases(contrainte[1]):
+                return False
+        return True
+    
+    def __sumOfCases(self, cases):
+        somme = 0
+        for c in cases:
+            somme += self.__solution[c]
+        return somme
+    
