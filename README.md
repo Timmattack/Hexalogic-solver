@@ -88,3 +88,14 @@ h3 = Hexologic(sommes=s)
 Si vous ne mettez qu'une case pour une contrainte, il faut bien penser à mettre cette case dans une liste ^^
 
 
+# 02/11/2026 : Solveur bête et méchant :
+On met la première case à 1, puis la deuxième à 1 aussi, ainsi de suite ...
+Si cette solution ne marche pas, on met la dernière case à 2
+Si cette solution ne marche pas, on met la dernière case à 3
+Sinon, on backtrack, on met l'avant dernière case à 2, puis la ddernière case à 1
+...
+
+Jusqu'à trouver la solution qui stisfait la contrainte
+
+Sur des tout petits exemples (Puzzle 4, 5 cases), on met très peu de temps (moins d'un millième de seconde),
+Mais pour des instances plus grandes (premier Puzzle bonus, 20 cases), le temps d'éxécution explose (1000 s)

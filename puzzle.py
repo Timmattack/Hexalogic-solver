@@ -64,16 +64,18 @@ class Hexologic:
         # Initialisation des cases à 0
         self.__solution = self.__initSolFromCases()
     
+    def getNbCases(self):
+        return len(self.__cases)
     
     def solve(self):
         # Renvoyer la liste des coordonnées et leur valeur
-        if(!self.__solve(0))
+        if(not self.__solve(0)):
             return {}
         else:
             return copy.deepcopy(self.__solution)
     
     def __solve(self, i_case):
-        if i_cases >= len(self.__cases):
+        if i_case >= len(self.__cases):
             # Toutes les cases ont été assignées : est-ce une solution ?
             return self.__checkSommes()
         
@@ -84,7 +86,7 @@ class Hexologic:
             if self.__solve(i_case+1):
                 return True
         
-        return false   
+        return False   
     
     def __checkSommes(self):
         for contrainte in self.__sommes:

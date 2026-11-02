@@ -1,4 +1,19 @@
 from puzzle import Hexologic
+from timeit import default_timer as timer
+
+
+def timeSolve(s):
+    ligne = Hexologic.ligne
+    col = Hexologic.colonne
+    diag = Hexologic.diagonale
+    h = Hexologic(sommes=s)
+    start = timer()
+    print("debut recherche")
+    res = h.solve()
+    end = timer()
+    printf(f"La solution a pris {end-start:.2f}s a être résolu")
+    return res
+
 
 def puzzlesMonde1():
 	ligne = Hexologic.ligne
@@ -29,7 +44,7 @@ def puzzlesMonde1():
 	s = [(8, diag((2,0), 3)),
 	(2, diag((3,0), 2)),
 	(4, ligne((2,0), 2)),
-	(7, ligne((4,1), 4)),
+	(7, ligne((1,1), 4)),
 	(4, ligne((3,2), 2)),
 	(3, col((4,1), 2)),
 	(5, col((2,0), 2)),
