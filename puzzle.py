@@ -36,7 +36,7 @@ class Hexologic:
     
     @staticmethod
     def __dictCasesToSortedList(dictCases):
-        listCases = list(dict.items())
+        listCases = list(dictCases.items())
         # On trie les cases par leur nombre de contraintes
         listCases.sort(key=lambda case : case[1])
         
@@ -50,7 +50,7 @@ class Hexologic:
         self.__cases = Hexologic.__dictCasesToSortedList(casesSommes)
         
         # Initialisation de la solution à 0
-        self.__solution = list(map(lambda e: {pos: e[0], val: 0}, self.__cases))
+        self.__solution = list(map(lambda e: {"pos": e[0], "val": 0}, self.__cases))
     
     """
     def solve():

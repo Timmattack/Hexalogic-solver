@@ -1,4 +1,4 @@
-
+from puzzle import Hexologic
 
 def puzzlesMonde1():
 	ligne = Hexologic.ligne
