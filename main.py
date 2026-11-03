@@ -1,4 +1,4 @@
-from puzzle import Hexologic
+from Hexologic import Hexologic
 from timeit import default_timer as timer
 
 
