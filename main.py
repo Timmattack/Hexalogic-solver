@@ -8,7 +8,7 @@ def timeSolve(s):
     diag = Hexologic.diagonale
     h = Hexologic(sommes=s)
     start = timer()
-    print("debut recherche")
+    print(f"debut recherche : {h.getNbCases()} cases pour ce puzzle")
     res = h.solve()
     end = timer()
     printf(f"La solution a pris {end-start:.2f}s a être résolu")
