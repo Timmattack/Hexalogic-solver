@@ -1,3 +1,18 @@
+from puzzle import Hexologic
+from timeit import default_timer as timer
+
+
+def timeSolve(s):
+    ligne = Hexologic.ligne
+    col = Hexologic.colonne
+    diag = Hexologic.diagonale
+    h = Hexologic(sommes=s)
+    start = timer()
+    print(f"debut recherche : {h.getNbCases()} cases pour ce puzzle")
+    res = h.solve()
+    end = timer()
+    printf(f"La solution a pris {end-start:.2f}s a être résolu")
+    return res
 
 
 def puzzlesMonde1():
@@ -29,7 +44,7 @@ def puzzlesMonde1():
 	s = [(8, diag((2,0), 3)),
 	(2, diag((3,0), 2)),
 	(4, ligne((2,0), 2)),
-	(7, ligne((4,1), 4)),
+	(7, ligne((1,1), 4)),
 	(4, ligne((3,2), 2)),
 	(3, col((4,1), 2)),
 	(5, col((2,0), 2)),
@@ -129,12 +144,12 @@ def puzzlesMonde3():
 	
 	# Puzzle 33
 	s = [(4, diag((1, 0), 2)),
-	(4, ligne((1, 1), 2))),
-	(4, col((1, 0), 2))),
-	(5, diag((4, 2), 2))),
-	(4, ligne((4, 3), 2))),
-	(3, ligne((0, 3), 2))),
-	(4, diag((0, 2), 2)))]
+	(4, ligne((1, 1), 2)),
+	(4, col((1, 0), 2)),
+	(5, diag((4, 2), 2)),
+	(4, ligne((4, 3), 2)),
+	(3, ligne((0, 3), 2)),
+	(4, diag((0, 2), 2))]
 	e = [[(1, 0), (5, 3), (0, 3)]]
 	h33 = Hexologic(sommes=s, egals=e)
 	
@@ -142,9 +157,9 @@ def puzzlesMonde3():
 	s = [(4, ligne((0, 0), 2)),
 	(5, diag((1, 0), 2)),
 	(5, col((2, 1), 2)),
-	(4, ligne((, ), 2)),
-	(5, diag((, ), 2)),
-	(5, col((, ), 2))]
+	(4, ligne((1, 2), 2)),
+	(5, diag((0, 1), 2)),
+	(5, col((0, 0), 2))]
 	e = [[(0, 0), (2, 2)],
 	[(1, 0), (1, 2)],
 	[(0, 1), (2, 1)]]
