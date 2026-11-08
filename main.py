@@ -2,13 +2,44 @@ from Hexologic import Hexologic
 from timeit import default_timer as timer
 
 
+def afficheLigneSolution(l):
+    for paire in l:
+        print(f"{paire[0]}:{paire[1]}", end=' ')
+
+def afficheSolution(res):
+    """
+    Une solution est un dictionnaire de clé (x,y), valeur la valeur de la case
+    On va afficher sur la même ligne les cases de même 'y'
+    """
+    if not res:
+        print("LA SOLUTION EST VIDE : PAS DE SOLUTION")
+        return
+    
+    l = list(res.items())
+    affiche = {}
+    
+    # On collectionne les différentes valeurs Y
+    Ys = []
+    for paire in l:
+        Ys.append(paire[0][1])
+    Ys.sort()
+    
+    # Pour chaque valeur de y, on rassemble les bonnes paires
+    for y in Ys:
+        affiche[y] = [paire for paire in l if paire[0][1]==y]
+        affiche[y].sort(key=lambda paire: paire[0][0])
+    
+    for ligne in affiche.values():
+        afficheLigneSolution(ligne)
+        print()
+
 def timeSolve(s=None, f=None, e=None, c=None):
     h = Hexologic(sommes=s, forces=f)
     start = timer()
     print(f"debut recherche : {h.getNbCases()} cases pour ce puzzle")
     res = h.solve()
     end = timer()
-    print(f"La solution a pris {end-start:.2f}s a être résolu")
+    print(f"Le puzzle a pris {end-start:.2f}s a être résolu")
     return res
 
 
@@ -19,22 +50,22 @@ def puzzlesMonde1():
 	
 	print("--- premier Puzzle du premier monde (juste une case)")
 	s = [(2, [(0,0)])] # liste de couples (somme, listeDeCoordonnées)
-	print(timeSolve(s))
+	afficheSolution(timeSolve(s))
 	
 	print("--- deuxième Puzzle du premier monde (3 cases isolées)")
 	s = [(1, [(2, 2)]), (2, [(0, 0)]), (3, [(2, 0)])]
-	print(timeSolve(s))
+	afficheSolution(timeSolve(s))
 	
 	print("--- 3ème Puzzle du premier monde (3 cases, une liée à 2 sommes)")
 	s = [(6, diag((0,0), 2)), 
 	(4, ligne((1,1), 2)) ]
-	print(timeSolve(s))
+	afficheSolution(timeSolve(s))
 	
 	print("--- 4ème Puzzle du premier monde")
 	s = [(3, diag((0,0), 3)), 
 	(4, ligne((1,1), 2)),
 	(2, ligne((2,2), 2))]
-	print(timeSolve(s))
+	afficheSolution(timeSolve(s))
 	
 	print("--- bonus 1: Un puzzle bien plus gros")
 	# Oui, il y a 16 sommes à compléter, pour 20 cases
@@ -54,7 +85,7 @@ def puzzlesMonde1():
 	(4, diag((0,4), 2)),
 	(3, ligne((0,2), 2)),
 	(5, diag((1,2), 3))]
-	print(timeSolve(s))
+	afficheSolution(timeSolve(s))
 	
 	print("--- bonus 3: Un autre gros puzzle")
 	s = [(6, ligne((0,0), 2)),
@@ -69,7 +100,7 @@ def puzzlesMonde1():
     (6, col((1,0), 4)),
     (4, diag((0,2), 3)),
     (4, diag((1,2), 2))]
-	print(timeSolve(s))
+	afficheSolution(timeSolve(s))
     
 
 def puzzlesMonde2():
@@ -87,13 +118,13 @@ def puzzlesMonde2():
 	s = [(7, diag((0,0), 2)),
 	(4, col((0,0), 2))]
 	f = [((1,1), 4)]
-	print(timeSolve(s=s, f=f))
+	afficheSolution(timeSolve(s=s, f=f))
 	
 	print("--- Puzzle 17")
 	s = [(5, diag((0,0), 2)),
 	(9, ligne((1,1), 3))]
 	f = [((2,1), 6)]
-	print(timeSolve(s=s, f=f))
+	afficheSolution(timeSolve(s=s, f=f))
 	
 	print("--- Puzzle 18")
 	s = [(4, diag((0,0), 2)),
@@ -102,7 +133,7 @@ def puzzlesMonde2():
 	(8, col((1,1), 2))]
 	f = [((2,0), 4), 
 	((2,1), 6)]
-	print(timeSolve(s=s, f=f))
+	afficheSolution(timeSolve(s=s, f=f))
 	
 	print("--- Bonus 1 (19 sommes, 25 cases, 4 cases forcées)")
 	s = [(9, ligne((3,0), 3)),
@@ -128,7 +159,7 @@ def puzzlesMonde2():
 	((2,2), 5),
 	((7,2), 4),
 	((6,4), 4)]
-	print(timeSolve(s=s, f=f))
+	afficheSolution(timeSolve(s=s, f=f))
 
 
 def puzzlesMonde3():
