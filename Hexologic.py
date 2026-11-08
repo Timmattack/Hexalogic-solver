@@ -28,7 +28,7 @@ class Hexologic:
         return sols
     
     def __getCasesFromSommes(self):
-        cases = {}
+        cases = set()
         for s in self.__sommes:
             for c in s[1]:
                 cases.add(c)
@@ -38,7 +38,10 @@ class Hexologic:
         self.__sommes = sommes if sommes else []
         casesSommes = self.__getCasesFromSommes()
         
-        self.__cases = dictFromCases(casesSommes)
+        self.__cases = Hexologic.__dictFromCases(casesSommes)
+    
+    def getNbCases(self):
+        return len(self.__cases)
     
     def solve(self):
         if(self.__solve()):
@@ -54,7 +57,7 @@ class Hexologic:
     i_somme : la contrainte concernée
     """
     def __completeSommes(self, i_somme):
-        # Toutes les cases ont été parcourues : objectif atteint
+        # Toutes les sommes ont été parcourues : objectif atteint
         if i_somme < 0:
             return True
         
@@ -62,33 +65,36 @@ class Hexologic:
         
         # Si cette somme est complétable :
         #   On continue
-        return self.__completeSomme(somme) and self.__completeSommes(i_sommes-1)
+        return self.__completeSomme(somme, i_somme)
     
     """
     somme : Une contrainte de somme : paire (somme, [coordonnées])
     """
-    def __completeSomme(self, somme):
-        return self.__atteintSomme(somme[0], somme[1], len(somme[1])-1):
+    def __completeSomme(self, somme, i_somme):
+        return self.__atteintSomme(somme[0], somme[1], len(somme[1])-1, i_somme)
     
     """
     goal : un entier positif : la somme à atteindre
     liste : une liste de coordonnées : les points à additionner
     i_case : la case
     """
-    def __atteintSomme(self, goal, liste, i_case):
+    def __atteintSomme(self, goal, liste, i_case, i_somme):
         if goal < 0:
             return False
+        # Si la somme est complétée : On passe à la suivante, avec possibilité de backtrack
         if (i_case < 0) and (goal == 0):
-            return True
+            return self.__completeSommes(i_somme-1)
+        if (i_case < 0):
+            return False
         
         val = self.__cases[liste[i_case]]
-        # Si la case est set : On passe au suivant
+        # Si la case est set : On passe à la case suivante de cette somme
         if val != 0:
-            return self.__atteintSomme(goal-val, liste, i_case-1)
+            return self.__atteintSomme(goal-val, liste, i_case-1, i_somme)
         
         for i in range(Hexologic.MINVAL_CASE, Hexologic.MAXVAL_CASE+1):
             self.__cases[liste[i_case]] = i
-            if self.__atteintSomme(goal-i, liste, i_case-1):
+            if self.__atteintSomme(goal-i, liste, i_case-1, i_somme):
                 return True
         
         self.__cases[liste[i_case]] = 0
