@@ -92,7 +92,7 @@ Si vous ne mettez qu'une case pour une contrainte, il faut bien penser à mettre
 On met la première case à 1, puis la deuxième à 1 aussi, ainsi de suite ...
 Si cette solution ne marche pas, on met la dernière case à 2
 Si cette solution ne marche pas, on met la dernière case à 3
-Sinon, on backtrack, on met l'avant dernière case à 2, puis la ddernière case à 1
+Sinon, on backtrack, on met l'avant dernière case à 2, puis la dernière case à 1
 ...
 
 Jusqu'à trouver la solution qui stisfait la contrainte
@@ -101,7 +101,7 @@ Sur des tout petits exemples (Puzzle 4, 5 cases), on met très peu de temps (moi
 Mais pour des instances plus grandes (premier Puzzle bonus, 20 cases), le temps d'éxécution explose (1000 s)
 
 # 8/11/2026 : Un solveur qui suit la contrainte :
-Maintenant, au lieu de bruteforce comme un idiot, le solveur va chercher à compléter les sommes une par une, au lieu de juste mettre au hasard
+Maintenant, au lieu de bruteforce comme un idiot, le solveur va chercher à compléter les sommes une par une, suivant ainsi un objectif plus clair
 
 - Je complète la première contrainte de somme, en assignant aux cases de cette contrainte une valeur vérifiant celle-ci
 - Je complète la suivante ...
