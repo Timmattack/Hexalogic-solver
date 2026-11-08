@@ -23,7 +23,7 @@ def puzzlesMonde1():
 	print("--- premier Puzzle du premier monde (juste une case)")
 	s = [(2, [(0,0)])] # liste de couples (somme, listeDeCoordonnées)
 	print(timeSolve(s))
-
+	
 	print("--- deuxième Puzzle du premier monde (3 cases isolées)")
 	s = [(1, [(2, 2)]), (2, [(0, 0)]), (3, [(2, 0)])]
 	print(timeSolve(s))
@@ -58,9 +58,9 @@ def puzzlesMonde1():
 	(3, ligne((0,2), 2)),
 	(5, diag((1,2), 3))]
 	print(timeSolve(s))
-
-    print("--- bonus 3: Un autre gros puzzle")
-    s = [(6, ligne((0,0), 2)),
+	
+	print("--- bonus 3: Un autre gros puzzle")
+	s = [(6, ligne((0,0), 2)),
     (11, diag((1,0), 5)),
     (3, diag((3,1), 2)),
     (9, col((3,0), 4)),
@@ -72,7 +72,8 @@ def puzzlesMonde1():
     (6, col((1,0), 4)),
     (4, diag((0,2), 3)),
     (4, diag((1,2), 2))]
-    print(timeSolve(s))
+	print(timeSolve(s))
+    
 
 def puzzlesMonde2():
 	"""
