@@ -38,14 +38,31 @@ class Hexologic:
                 cases.add(c)
         return cases
     
+    def __getCasesFromForces(self):
+        cases = set()
+        for f in self.__forces:
+            cases.add(f[0])
+        return cases
+    
+    def __setCasesFromForces(self):
+        for f in self.__forces:
+            self.__cases[f[0]] = f[1]
+    
+    # --- Constructeur
+    """
+    sommes : [sommes], avec une contrainte de somme : (s, [cases])
+    forces : [forces], avec une contrainte de force : (case, val)
+    """
     def __init__(self, sommes=None, forces=None):
         self.__sommes = sommes if sommes else []
         self.__forces = forces if forces else []
         
         casesSommes = self.__getCasesFromSommes()
+        casesForces = self.__getCasesFromForces()
         
+        self.__cases = Hexologic.__dictFromCases(casesSommes | casesForces)
         
-        self.__cases = Hexologic.__dictFromCases(casesSommes)
+        self.__setCasesFromForces()
     
     def getNbCases(self):
         return len(self.__cases)
