@@ -1,9 +1,13 @@
 import copy
 
+
+
 class Hexologic:
     MINVAL_CASE=1
     MAXVAL_CASE=3
-
+    DEFAULTVAL_CASE=-1
+    
+    
     @staticmethod
     def ligne(case, nb_cases):
         x, y = case
@@ -24,7 +28,7 @@ class Hexologic:
     
     @staticmethod
     def __dictFromCases(cases):
-        sols = {c: 0 for c in cases}
+        sols = {c: Hexologic.DEFAULTVAL_CASE for c in cases}
         return sols
     
     def __getCasesFromSommes(self):
@@ -34,9 +38,12 @@ class Hexologic:
                 cases.add(c)
         return cases
     
-    def __init__(self, sommes=None):
+    def __init__(self, sommes=None, forces=None):
         self.__sommes = sommes if sommes else []
+        self.__forces = forces if forces else []
+        
         casesSommes = self.__getCasesFromSommes()
+        
         
         self.__cases = Hexologic.__dictFromCases(casesSommes)
     
@@ -73,6 +80,7 @@ class Hexologic:
     def __completeSomme(self, somme, i_somme):
         return self.__atteintSomme(somme[0], somme[1], len(somme[1])-1, i_somme)
     
+    
     """
     goal : un entier positif : la somme à atteindre
     liste : une liste de coordonnées : les points à additionner
@@ -89,13 +97,15 @@ class Hexologic:
         
         val = self.__cases[liste[i_case]]
         # Si la case est set : On passe à la case suivante de cette somme
-        if val != 0:
+        if val != Hexologic.DEFAULTVAL_CASE:
             return self.__atteintSomme(goal-val, liste, i_case-1, i_somme)
         
+        # On cherche quelle valeur peut correspondre à la case
         for i in range(Hexologic.MINVAL_CASE, Hexologic.MAXVAL_CASE+1):
             self.__cases[liste[i_case]] = i
             if self.__atteintSomme(goal-i, liste, i_case-1, i_somme):
                 return True
         
-        self.__cases[liste[i_case]] = 0
+        # Aucune valeur ne convient, on la remet à défaut
+        self.__cases[liste[i_case]] = Hexologic.DEFAULTVAL_CASE
         return False

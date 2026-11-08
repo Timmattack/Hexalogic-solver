@@ -3,10 +3,7 @@ from timeit import default_timer as timer
 
 
 def timeSolve(s=None, f=None, e=None, c=None):
-    ligne = Hexologic.ligne
-    col = Hexologic.colonne
-    diag = Hexologic.diagonale
-    h = Hexologic(sommes=s)
+    h = Hexologic(sommes=s, forces=f)
     start = timer()
     print(f"debut recherche : {h.getNbCases()} cases pour ce puzzle")
     res = h.solve()
@@ -90,13 +87,13 @@ def puzzlesMonde2():
 	s = [(7, diag((0,0), 2)),
 	(4, col((0,0), 2))]
 	f = [((1,1), 4)]
-	h16 = Hexologic(sommes=s, forces=f)
+	print(timeSolve(s=s, f=f))
 	
 	print("--- Puzzle 17")
 	s = [(5, diag((0,0), 2)),
 	(9, ligne((1,1), 3))]
 	f = [((2,1), 6)]
-	h17 = Hexologic(sommes=s, forces=f)
+	print(timeSolve(s=s, f=f))
 	
 	print("--- Puzzle 18")
 	s = [(4, diag((0,0), 2)),
@@ -105,7 +102,7 @@ def puzzlesMonde2():
 	(8, col((1,1), 2))]
 	f = [((2,0), 4), 
 	((2,1), 6)]
-	h18 = Hexologic(sommes=s, forces=f)
+	print(timeSolve(s=s, f=f))
 	
 	print("--- Bonus 1 (19 sommes, 25 cases, 4 cases forcées)")
 	s = [(9, ligne((3,0), 3)),
@@ -131,7 +128,8 @@ def puzzlesMonde2():
 	((2,2), 5),
 	((7,2), 4),
 	((6,4), 4)]
-	hb1 = Hexologic(sommes=s, forces=f)
+	print(timeSolve(s=s, f=f))
+
 
 def puzzlesMonde3():
 	"""
@@ -294,7 +292,7 @@ def main():
     36  46  56
 	"""
 	puzzlesMonde1()
-	# puzzlesMonde2()
+	puzzlesMonde2()
 	# puzzlesMonde3()
 	# puzzlesMonde4()
 	
