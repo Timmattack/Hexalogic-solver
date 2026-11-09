@@ -110,3 +110,7 @@ Si une contrainte n'est plus vérifiable, HOP, backtrack
 
 
 Les résultats sont BEACUOUP plus rapides sur les "gros exemples" (20 cases), on est inférieur à 0.01s
+
+# 8/11/2026 : Force ajouté
+Ça ne change pas grand chose, on assigne simplement la valeur demandée aux cases spécifiée avant le processus de résolution
+
