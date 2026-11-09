@@ -31,6 +31,14 @@ class Hexologic:
         sols = {c: Hexologic.DEFAULTVAL_CASE for c in cases}
         return sols
     
+    @staticmethod
+    def __initEgals(egals):
+        es = {}
+        for e in egals:
+            for case in e:
+                es[case] = [c for c in e if c!=case]
+        return es
+    
     def __getCasesFromSommes(self):
         cases = set()
         for s in self.__sommes:
@@ -53,9 +61,10 @@ class Hexologic:
     sommes : [sommes], avec une contrainte de somme : (s, [cases])
     forces : [forces], avec une contrainte de force : (case, val)
     """
-    def __init__(self, sommes=None, forces=None):
+    def __init__(self, sommes=None, forces=None, egals=None):
         self.__sommes = sommes if sommes else []
         self.__forces = forces if forces else []
+        self.__egals = Hexologic.__initEgals(egals) if egals else {}
         
         casesSommes = self.__getCasesFromSommes()
         casesForces = self.__getCasesFromForces()
@@ -63,6 +72,15 @@ class Hexologic:
         self.__cases = Hexologic.__dictFromCases(casesSommes | casesForces)
         
         self.__setCasesFromForces()
+    
+    def __getCaseValue(self, case):
+        return self.__cases[case]
+    
+    def __setCaseValue(self, case, val):
+        self.__cases[case] = val
+        if case in self.__egals:
+            for autre in self.__egals[case]:
+                self.__cases[autre] = val
     
     def getNbCases(self):
         return len(self.__cases)
@@ -112,17 +130,17 @@ class Hexologic:
         if (i_case < 0):
             return False
         
-        val = self.__cases[liste[i_case]]
+        val = self.__getCaseValue(liste[i_case])
         # Si la case est set : On passe à la case suivante de cette somme
         if val != Hexologic.DEFAULTVAL_CASE:
             return self.__atteintSomme(goal-val, liste, i_case-1, i_somme)
         
         # On cherche quelle valeur peut correspondre à la case
         for i in range(Hexologic.MINVAL_CASE, Hexologic.MAXVAL_CASE+1):
-            self.__cases[liste[i_case]] = i
+            self.__setCaseValue(liste[i_case], i)
             if self.__atteintSomme(goal-i, liste, i_case-1, i_somme):
                 return True
         
         # Aucune valeur ne convient, on la remet à défaut
-        self.__cases[liste[i_case]] = Hexologic.DEFAULTVAL_CASE
+        self.__setCaseValue(liste[i_case], Hexologic.DEFAULTVAL_CASE)
         return False
