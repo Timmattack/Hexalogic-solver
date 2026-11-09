@@ -242,7 +242,7 @@ def puzzlesMonde4():
 	print("--- Puzzle 48")
 	s = [(9, diag((0, 0), 3)),
 	(4, ligne((0, 0), 2)),
-	(7, col((1, 0), 3))]
+	(7, ligne((1, 2), 2))]
 	f = [((2, 2), 5)]
 	e = [[(1, 0), (1, 2)]]
 	afficheSolution(timeSolve(s=s, f=f, e=e))
