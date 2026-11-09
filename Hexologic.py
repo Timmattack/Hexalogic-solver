@@ -56,6 +56,13 @@ class Hexologic:
         for f in self.__forces:
             self.__cases[f[0]] = f[1]
     
+    def __getCasesFromEgals(self):
+        cases = set()
+        for cs in cases:
+            for c in cs:
+                cases.add(c)
+        return cases
+    
     # --- Constructeur
     """
     sommes : [sommes], avec une contrainte de somme : (s, [cases])
@@ -68,8 +75,9 @@ class Hexologic:
         
         casesSommes = self.__getCasesFromSommes()
         casesForces = self.__getCasesFromForces()
+        casesEgals = self.__getCasesFromEgals()
         
-        self.__cases = Hexologic.__dictFromCases(casesSommes | casesForces)
+        self.__cases = Hexologic.__dictFromCases(casesSommes | casesForces | casesEgals)
         
         self.__setCasesFromForces()
     
