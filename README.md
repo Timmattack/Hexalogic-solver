@@ -114,3 +114,6 @@ Les résultats sont BEACUOUP plus rapides sur les "gros exemples" (20 cases), on
 # 8/11/2026 : Force ajouté
 Ça ne change pas grand chose, on assigne simplement la valeur demandée aux cases spécifiée avant le processus de résolution
 
+# 9/11/2026 : Egals ajouté
+Quand on assigne une valeur à une case : On vérifie si elle est contrainte par egal, si c'est le cas, on assigne les autres
+
