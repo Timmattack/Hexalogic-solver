@@ -285,21 +285,21 @@ def puzzlesMonde5():
 	more='>'
 	eg='='
 	
-	# Puzzle 61
+	print("--- Puzzle 61")
 	c = [(((1,0), more), [(0,0)], [(2,0)]),
 	(((3,0), more), [(2,0)], [(4,0)])]
 	afficheSolution(timeSolve(c=c))
 	
-	# Puzzle 62
+	print("--- Puzzle 62")
 	s = [(3, col((0,2), 3))]
 	c = [(((3, 0), less), [(2,0)], [(4,0)]),
 	(((4, 1), more), [(4,2)], [(4,0)]),
 	(((3, 2), eg), ligne((0, 2), 3), [(4,2)]),
-	(((0, 3), more), [(0,4)], [0,2]),
+	(((0, 3), more), [(0,4)], [(0,2)]),
 	(((1, 4), eg), [(0,4)], ligne((2,4), 2))]
 	afficheSolution(timeSolve(s=s, c=c))
 
-	# Puzzle 63
+	print("--- Puzzle 63")
 	s = [(6, col((2,0), 5)),
 	(5, diag((2,0), 3)),
 	(6, diag((0,2), 3))]

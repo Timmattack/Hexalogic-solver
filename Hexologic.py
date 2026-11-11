@@ -70,9 +70,9 @@ class Hexologic:
         cases = set()
         for comp in self.__comps:
             cases.add(comp[0][0])
-            for cg in cases[1]:
+            for cg in comp[1]:
                 cases.add(cg)
-            for cd in cases[2]:
+            for cd in comp[2]:
                 cases.add(cd)
         return cases
     
@@ -198,7 +198,7 @@ class Hexologic:
         # Listons les cases qui ne sont pas encore set
         cases = list(filter(lambda case: not self.__estCaseSet(case), self.__cases))
         
-        return __bruteForcereste1(self, cases, len(cases)-1)
+        return self.__bruteForceReste1(cases, len(cases)-1)
     
     def __bruteForceReste1(self, cases, i_cases):
         if i_cases < 0:
@@ -210,7 +210,7 @@ class Hexologic:
         # On cherche quelle valeur peut correspondre à la case
         for i in range(Hexologic.MINVAL_CASE, Hexologic.MAXVAL_CASE+1):
             self.__setCaseValue(cases[i_cases], i)
-            if self.__bruteForceReste1(cases, i_cases-1)
+            if self.__bruteForceReste1(cases, i_cases-1):
                 return True
         
         # Aucune valeur ne convient, on la remet à défaut
