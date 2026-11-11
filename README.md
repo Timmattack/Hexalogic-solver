@@ -117,3 +117,5 @@ Les résultats sont BEACUOUP plus rapides sur les "gros exemples" (20 cases), on
 # 9/11/2026 : Egals ajouté
 Quand on assigne une valeur à une case : On vérifie si elle est contrainte par egal, si c'est le cas, on assigne les autres
 
+# 11/11/2026 : Comps ajouté
+Bon c'est un peu sale, c'est du pur bruteforce, mais ça marche ^^
