@@ -86,7 +86,7 @@ class Hexologic:
     sommes : [sommes], pour chaque contrainte de somme de la forme : (s, [cases])
     forces : [forces], pour chaque contrainte de force de la forme : (case, val)
     egals : [egals], pour chaque contrainte de egal de la forme : [cases]
-    comps : [comps], pour chaque contrainte de comp de la forme : ((case, comparateur), [casesGauche], [casesDroite]
+    comps : [comps], pour chaque contrainte de comp de la forme : ((case, comparateur), [casesGauche], [casesDroite])
     """
     def __init__(self, sommes=None, forces=None, egals=None, comps=None):
         self.__sommes = sommes if sommes else []
@@ -106,6 +106,9 @@ class Hexologic:
         
         self.__setCasesFromForces()
         self.__setCasesFromComps()
+    
+    def __estCaseSet(self, case):
+        return self.__getCaseValue(case) != Hexologic.DEFAULTVAL_CASE
     
     def __getCaseValue(self, case):
         return self.__cases[case]
@@ -168,8 +171,8 @@ class Hexologic:
             return False
         
         val = self.__getCaseValue(liste[i_case])
-        # Si la case est set : On passe à la case suivante de cette somme
-        if val != Hexologic.DEFAULTVAL_CASE:
+        
+        if self.__estCaseSet(liste[i_case]):
             return self.__atteintSomme(goal-val, liste, i_case-1, i_somme)
         
         # On cherche quelle valeur peut correspondre à la case
@@ -185,9 +188,60 @@ class Hexologic:
     ###
     ### --- CompleteComparaison --- ###
     ###
+    
+    # À partir de là, on fait le pari qu'assez de cases sont complétées,
+    # et qu'il est moins long de faire un brute force sur les cases contraintes par comparaison
     def __completeComps(self, i_comp):
-        # Toutes les comparaisons sont complétées : Objectif atteint
-        if i_comp < 0:
-            return True
+        return self.__bruteForceReste()
+
+    def __bruteForceReste(self):
+        # Listons les cases qui ne sont pas encore set
+        cases = list(filter(lambda case: not self.__estCaseSet(case), self.__cases))
         
+        return __bruteForcereste1(self, cases, len(cases)-1)
+    
+    def __bruteForceReste1(self, cases, i_cases):
+        if i_cases < 0:
+            return self.__estValideParComps()
         
+        if self.__estCaseSet(cases[i_cases]):
+            return self.__bruteForceReste1(cases, i_cases-1)
+        
+        # On cherche quelle valeur peut correspondre à la case
+        for i in range(Hexologic.MINVAL_CASE, Hexologic.MAXVAL_CASE+1):
+            self.__setCaseValue(cases[i_cases], i)
+            if self.__bruteForceReste1(cases, i_cases-1)
+                return True
+        
+        # Aucune valeur ne convient, on la remet à défaut
+        self.__setCaseValue(cases[i_cases], Hexologic.DEFAULTVAL_CASE)
+        return False
+        
+    def __estValideParComps(self):
+        for comp in self.__comps:
+            if not self.__estValideParComp(comp):
+                return False
+        return True
+
+    def __estValideParComp(self, comp):
+        mode = comp[0][1]
+        sommeG = self.__sumCasesFromTab(comp[1])
+        sommeD = self.__sumCasesFromTab(comp[2])
+        
+        match mode:
+            case Hexologic.COMP_EGAL:
+                return sommeG == sommeD
+            case Hexologic.COMP_LESS:
+                return sommeG < sommeD
+            case Hexologic.COMP_MORE:
+                return sommeG > sommeD
+            case _:
+                raise Exception(f"La comparaison '{mode}' dans la contrainte {comp} n'est pas prise en charge")
+
+    # Retourne la somme des valeurs assignées aux cases d'une liste
+    def __sumCasesFromTab(self, tab):
+        somme = 0
+        for case in tab:
+            somme += self.__cases[case]
+        
+        return somme
