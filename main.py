@@ -34,7 +34,7 @@ def afficheSolution(res):
         print()
 
 def timeSolve(s=None, f=None, e=None, c=None):
-    h = Hexologic(sommes=s, forces=f, egals=e)
+    h = Hexologic(sommes=s, forces=f, egals=e, comps=c)
     start = timer()
     print(f"debut recherche : {h.getNbCases()} cases pour ce puzzle")
     res = h.solve()
@@ -288,7 +288,7 @@ def puzzlesMonde5():
 	# Puzzle 61
 	c = [(((1,0), more), [(0,0)], [(2,0)]),
 	(((3,0), more), [(2,0)], [(4,0)])]
-	h61 = Hexologic(comps=c)
+	afficheSolution(timeSolve(c=c))
 	
 	# Puzzle 62
 	s = [(3, col((0,2), 3))]
@@ -297,7 +297,7 @@ def puzzlesMonde5():
 	(((3, 2), eg), ligne((0, 2), 3), [(4,2)]),
 	(((0, 3), more), [(0,4)], [0,2]),
 	(((1, 4), eg), [(0,4)], ligne((2,4), 2))]
-	h62 = Hexologic(sommes=s, comps=c)
+	afficheSolution(timeSolve(s=s, c=c))
 
 	# Puzzle 63
 	s = [(6, col((2,0), 5)),
@@ -307,7 +307,7 @@ def puzzlesMonde5():
 	(((1, 2), eg), [(0,2)], [(2,2)]),
 	(((3, 2), more), [(2,2)], [(4,2)]),
 	(((2, 3), less), [(2,4)], [(2,2)])]
-	h63 = Hexologic(sommes=s, comps=c)
+	afficheSolution(timeSolve(s=s, c=c))
 	
 def main():
 	"""
@@ -327,7 +327,7 @@ def main():
 	puzzlesMonde3()
 	puzzlesMonde4()
 	# puzzlesMonde5()
-	
-	
+
+
 if __name__ == "__main__":
     main()

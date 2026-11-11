@@ -7,6 +7,9 @@ class Hexologic:
     MAXVAL_CASE=3
     DEFAULTVAL_CASE=-1
     
+    COMP_LESS='<'
+    COMP_MORE='>'
+    COMP_EGAL='='
     
     @staticmethod
     def ligne(case, nb_cases):
@@ -63,23 +66,46 @@ class Hexologic:
                 cases.add(c)
         return cases
     
+    def __getCasesFromComps(self):
+        cases = set()
+        for comp in self.__comps:
+            cases.add(comp[0][0])
+            for cg in cases[1]:
+                cases.add(cg)
+            for cd in cases[2]:
+                cases.add(cd)
+        return cases
+    
+    # Les cases qui servent de comparateur ont pour valeur 0
+    def __setCasesFromComps(self):
+        for comp in self.__comps:
+            self.__cases[comp[0][0]] = 0
+    
     # --- Constructeur
     """
-    sommes : [sommes], avec une contrainte de somme : (s, [cases])
-    forces : [forces], avec une contrainte de force : (case, val)
+    sommes : [sommes], pour chaque contrainte de somme de la forme : (s, [cases])
+    forces : [forces], pour chaque contrainte de force de la forme : (case, val)
+    egals : [egals], pour chaque contrainte de egal de la forme : [cases]
+    comps : [comps], pour chaque contrainte de comp de la forme : ((case, comparateur), [casesGauche], [casesDroite]
     """
-    def __init__(self, sommes=None, forces=None, egals=None):
+    def __init__(self, sommes=None, forces=None, egals=None, comps=None):
         self.__sommes = sommes if sommes else []
         self.__forces = forces if forces else []
         self.__egals = Hexologic.__initEgals(egals) if egals else {}
+        self.__comps = comps if comps else []
         
         casesSommes = self.__getCasesFromSommes()
         casesForces = self.__getCasesFromForces()
         casesEgals = self.__getCasesFromEgals()
+        casesComps = self.__getCasesFromComps()
         
-        self.__cases = Hexologic.__dictFromCases(casesSommes | casesForces | casesEgals)
+        self.__cases = Hexologic.__dictFromCases(casesSommes | 
+            casesForces | 
+            casesEgals | 
+            casesComps)
         
         self.__setCasesFromForces()
+        self.__setCasesFromComps()
     
     def __getCaseValue(self, case):
         return self.__cases[case]
@@ -103,13 +129,16 @@ class Hexologic:
         # Problème résolu si toutes les sommes sont complétées
         return self.__completeSommes(len(self.__sommes)-1)
     
+    ###
+    ### --- COMPLETE SOMME --- ###
+    ###
     """
     i_somme : la contrainte concernée
     """
     def __completeSommes(self, i_somme):
-        # Toutes les sommes ont été parcourues : objectif atteint
+        # Toutes les sommes ont été complétées : Tentons de compléter les comparaisons maintenant
         if i_somme < 0:
-            return True
+            return self.__completeComps(len(self.__comps)-1)
         
         somme = self.__sommes[i_somme]
         
@@ -152,3 +181,13 @@ class Hexologic:
         # Aucune valeur ne convient, on la remet à défaut
         self.__setCaseValue(liste[i_case], Hexologic.DEFAULTVAL_CASE)
         return False
+    
+    ###
+    ### --- CompleteComparaison --- ###
+    ###
+    def __completeComps(self, i_comp):
+        # Toutes les comparaisons sont complétées : Objectif atteint
+        if i_comp < 0:
+            return True
+        
+        
