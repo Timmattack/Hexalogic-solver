@@ -31,10 +31,19 @@ class Hexologic:
     def __init__(self, sommes=None):
         self.__sommes = sommes if sommes else []
         
+        self.__cases = set()
+        self.addCasesSommes()
+        
         self.__pb = Problem()
         
+        self.__addCasesVariables()
         self.__addSommesConstraint()
     
+    def addCasesSommes(self):
+        self.__cases = self.__cases | {case for somme in self.__sommes for case in somme[1]}
+    
+    def __addCasesVariables(self):
+        self.__pb.addVariables(self.__cases, range(Hexologic.MINVAL_CASE, Hexologic.MAXVAL_CASE+1))
     @staticmethod
     def FUNestSommeValide(goal):
         def estSommeValide(*args):
@@ -47,6 +56,12 @@ class Hexologic:
         for somme in self.__sommes:
             self.__addSommeConstraint(somme)
     
-    def solve():
-        res = pb.getSolution()
+    def getNbCases(self):
+        return len(self.__cases)
+    
+    ###               ###
+    ### --- SOLVE --- ###
+    ###               ###
+    def solve(self):
+        res = self.__pb.getSolution()
         return res if res else {}
