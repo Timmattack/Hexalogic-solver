@@ -325,7 +325,7 @@ def main():
 	puzzlesMonde1()
 	puzzlesMonde2()
 	puzzlesMonde3()
-	# puzzlesMonde4()
+	puzzlesMonde4()
 	# puzzlesMonde5()
 
 

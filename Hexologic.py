@@ -30,7 +30,7 @@ class Hexologic:
     forces : liste de contrainte force : (case, valeur)
     egals : liste de constrainte egal : [cases] (les cases d'une même liste sont égales)
     """
-    def __init__(self, sommes=None, forces=None):
+    def __init__(self, sommes=None, forces=None, egals=None):
         self.__sommes = sommes if sommes else []
         self.__forces = forces if forces else []
         self.__egals = egals if egals else []
@@ -82,7 +82,7 @@ class Hexologic:
     
     ### Egals
     def __getCasesEgals(self):
-        return {case for egal in egals for case in egal}
+        return {case for egal in self.__egals for case in egal}
     def __addEgalsConstraint(self):
         for egal in self.__egals:
             self.__pb.addConstraint(AllEqualConstraint(), egal)
