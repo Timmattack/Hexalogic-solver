@@ -62,6 +62,9 @@ class Hexologic:
         
         self.__addEgalsConstraint()
         
+        # Toutes les variables qui ne sont pas set par:
+        # ni sommes, ni forces
+        self.__addCasesVariablesComps()
         # Les cases comparateur sont à 0
         self.__addCasesVariablesComparator()
         self.__addCompsConstraint()
@@ -102,11 +105,14 @@ class Hexologic:
     
     ### Comps
     def __getCasesComps(self):
-        return {case for comp in self.__comps for case in comp[1]} | 
-            {case for comp in self.__comps for case in comp[2]}
+        return {case for comp in self.__comps for case in comp[1]} | {case for comp in self.__comps for case in comp[2]}
     
-    def __getCasesComparators(self):
-        return {comp[0] for comp in self.__comps}
+    def __getCasesComparator(self):
+        return {comp[0][0] for comp in self.__comps}
+    
+    def __addCasesVariablesComps(self):
+        self.__pb.addVariables((self.__casesComps - self.__casesSommes) - self.__casesForces,
+            range(Hexologic.MINVAL_CASE, Hexologic.MAXVAL_CASE+1))
     
     def __addCasesVariablesComparator(self):
         self.__pb.addVariables(self.__casesComparator, [0])
@@ -115,7 +121,7 @@ class Hexologic:
         # La somme des cases de gauche est raccrochée à une variable
         nomGauche = f"c{ic}G"
         nbCasesGauche = len(comp[1])
-        self.__pb.addvariable(nomGauche, range(nbCasesGauche*Hexologic.MINVAL_CASE, nbCasesGauche*Hexologic.MAXVAL_CASE+1))
+        self.__pb.addVariable(nomGauche, range(nbCasesGauche*Hexologic.MINVAL_CASE, nbCasesGauche*Hexologic.MAXVAL_CASE+1))
         
         self.__pb.addConstraint(lambda goal, *args: goal==sum(args), [nomGauche]+comp[1])
         
@@ -151,5 +157,9 @@ class Hexologic:
     ### --- SOLVE --- ###
     ###               ###
     def solve(self):
+        
         res = self.__pb.getSolution()
-        return res if res else {}
+        # La solution contient aussi des variables 'inutiles':
+        # - Les variables qui servent à la comparaison 'ciG' et 'ciD' : filtrons les
+        trueRes = {k: res[k] for k in res if isinstance(k, tuple)}
+        return trueRes if trueRes else {}
