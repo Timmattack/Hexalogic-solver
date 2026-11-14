@@ -3,7 +3,11 @@ from constraint import Problem, AllEqualConstraint
 class Hexologic:
     MINVAL_CASE=1
     MAXVAL_CASE=3
-
+    
+    COMP_MORE='>'
+    COMP_LESS='<'
+    COMP_EGAL='='
+    
     @staticmethod
     def ligne(case, nb_cases):
         x, y = case
@@ -29,22 +33,27 @@ class Hexologic:
     sommes : liste de contrainte somme : (goal, [cases])
     forces : liste de contrainte force : (case, valeur)
     egals : liste de constrainte egal : [cases] (les cases d'une même liste sont égales)
+    comps : liste de constrainte comp : ((case, comparateur), [casesGauche], [casesDroite])
     """
-    def __init__(self, sommes=None, forces=None, egals=None):
+    def __init__(self, sommes=None, forces=None, egals=None, comps=None):
         self.__sommes = sommes if sommes else []
         self.__forces = forces if forces else []
         self.__egals = egals if egals else []
+        self.__comps = comps if comps else []
         
         self.__casesSommes = self.__getCasesSommes()
         self.__casesForces = self.__getCasesForces()
         self.__casesEgals = self.__getCasesEgals()
+        self.__casesComps = self.__getCasesComps()
+        self.__casesComparator = self.__getCasesComparator()
         
-        self.__cases = set() | self.__casesSommes | self.__casesForces | self.__casesEgals
+        self.__cases = set() | self.__casesSommes | self.__casesForces | self.__casesEgals | self.__casesComps | self.__casesComparator
         
         self.__pb = Problem()
         
         # Toutes les variables on pour domaine [MINVAL_CASE, MAXVAL_CASE]
-        # SAUF les cases contraintes par forces
+        # SAUF les cases contraintes par forces, 
+        # et les cases comparateur
         self.__addCasesVariables()
         self.__addSommesConstraint()
         
@@ -52,13 +61,17 @@ class Hexologic:
         # Pas de contrainte sur forces : c'est déjà le domaine qui contraint
         
         self.__addEgalsConstraint()
+        
+        # Les cases comparateur sont à 0
+        self.__addCasesVariablesComparator()
+        self.__addCompsConstraint()
     
     ### Sommes
     def __getCasesSommes(self):
         return {case for somme in self.__sommes for case in somme[1]}
     
     def __addCasesVariables(self):
-        self.__pb.addVariables(self.__casesSommes - self.__casesForces, range(Hexologic.MINVAL_CASE, Hexologic.MAXVAL_CASE+1))
+        self.__pb.addVariables((self.__casesSommes - self.__casesForces) - self.__casesComparator, range(Hexologic.MINVAL_CASE, Hexologic.MAXVAL_CASE+1))
     
     @staticmethod
     def FUNestSommeValide(goal):
@@ -87,6 +100,49 @@ class Hexologic:
         for egal in self.__egals:
             self.__pb.addConstraint(AllEqualConstraint(), egal)
     
+    ### Comps
+    def __getCasesComps(self):
+        return {case for comp in self.__comps for case in comp[1]} | 
+            {case for comp in self.__comps for case in comp[2]}
+    
+    def __getCasesComparators(self):
+        return {comp[0] for comp in self.__comps}
+    
+    def __addCasesVariablesComparator(self):
+        self.__pb.addVariables(self.__casesComparator, [0])
+    
+    def __addCompConstraint(self, comp, ic):
+        # La somme des cases de gauche est raccrochée à une variable
+        nomGauche = f"c{ic}G"
+        nbCasesGauche = len(comp[1])
+        self.__pb.addvariable(nomGauche, range(nbCasesGauche*Hexologic.MINVAL_CASE, nbCasesGauche*Hexologic.MAXVAL_CASE+1))
+        
+        self.__pb.addConstraint(lambda goal, *args: goal==sum(args), [nomGauche]+comp[1])
+        
+        # La somme des cases de droite est raccrochée à une variable
+        nomDroite = f"c{ic}D"
+        nbCasesDroite = len(comp[2])
+        self.__pb.addVariable(nomDroite, range(nbCasesDroite*Hexologic.MINVAL_CASE, nbCasesDroite*Hexologic.MAXVAL_CASE+1))
+        
+        self.__pb.addConstraint(lambda goal, *args: goal==sum(args), [nomDroite]+comp[2])
+        
+        # On compare la variable de gauche et de droite
+        match comp[0][1]:
+            case Hexologic.COMP_MORE:
+                self.__pb.addConstraint(lambda g,d: g > d, [nomGauche, nomDroite])
+                
+            case Hexologic.COMP_LESS:
+                self.__pb.addConstraint(lambda g,d: g < d, [nomGauche, nomDroite])
+                
+            case Hexologic.COMP_EGAL:
+                self.__pb.addConstraint(lambda g,d: g == d, [nomGauche, nomDroite])
+                
+            case _:
+                raise Exception(f"ERREUR : COMPARATEUR INCONNU\nLe comparateur '{comp[0][1]}' est inconnu({comp=})")
+    
+    def __addCompsConstraint(self):
+        for ic, comp in enumerate(self.__comps):
+            self.__addCompConstraint(comp, ic)
     
     def getNbCases(self):
         return len(self.__cases)
