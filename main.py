@@ -2,16 +2,44 @@ from Hexologic import Hexologic
 from timeit import default_timer as timer
 
 
-def timeSolve(s):
-    ligne = Hexologic.ligne
-    col = Hexologic.colonne
-    diag = Hexologic.diagonale
-    h = Hexologic(sommes=s)
+def afficheLigneSolution(l):
+    for paire in l:
+        print(f"{paire[0]}:{paire[1]}", end=' ')
+
+def afficheSolution(res):
+    """
+    Une solution est un dictionnaire de clé (x,y), valeur la valeur de la case
+    On va afficher sur la même ligne les cases de même 'y'
+    """
+    if not res:
+        print("LA SOLUTION EST VIDE : PAS DE SOLUTION")
+        return
+    
+    l = list(res.items())
+    affiche = {}
+    
+    # On collectionne les différentes valeurs Y
+    Ys = []
+    for paire in l:
+        Ys.append(paire[0][1])
+    Ys.sort()
+    
+    # Pour chaque valeur de y, on rassemble les bonnes paires
+    for y in Ys:
+        affiche[y] = [paire for paire in l if paire[0][1]==y]
+        affiche[y].sort(key=lambda paire: paire[0][0])
+    
+    for ligne in affiche.values():
+        afficheLigneSolution(ligne)
+        print()
+
+def timeSolve(s=None, f=None, e=None, c=None):
+    h = Hexologic(sommes=s)#, forces=f#, egals=e#, comps=c)
     start = timer()
     print(f"debut recherche : {h.getNbCases()} cases pour ce puzzle")
     res = h.solve()
     end = timer()
-    printf(f"La solution a pris {end-start:.2f}s a être résolu")
+    print(f"Le puzzle a pris {end-start:.2f}s a être résolu")
     return res
 
 
@@ -20,26 +48,26 @@ def puzzlesMonde1():
 	col = Hexologic.colonne
 	diag = Hexologic.diagonale
 	
-	# premier Puzzle du premier monde (juste une case)
+	print("--- premier Puzzle du premier monde (juste une case)")
 	s = [(2, [(0,0)])] # liste de couples (somme, listeDeCoordonnées)
-	h1 = Hexologic(sommes=s)
-
-	# deuxième Puzzle du premier monde (3 cases isolées)
-	s = [(1, [(2, 2)]), (2, [(0, 0)]), (3, [(2, 0)])]
-	h2 = Hexologic(sommes=s)
+	afficheSolution(timeSolve(s))
 	
-	# 3ème Puzzle du premier monde (3 cases, une liée à 2 sommes)
+	print("--- deuxième Puzzle du premier monde (3 cases isolées)")
+	s = [(1, [(2, 2)]), (2, [(0, 0)]), (3, [(2, 0)])]
+	afficheSolution(timeSolve(s))
+	
+	print("--- 3ème Puzzle du premier monde (3 cases, une liée à 2 sommes)")
 	s = [(6, diag((0,0), 2)), 
 	(4, ligne((1,1), 2)) ]
-	h3 = Hexologic(sommes=s)
+	afficheSolution(timeSolve(s))
 	
-	# 4ème Puzzle du premier monde
+	print("--- 4ème Puzzle du premier monde")
 	s = [(3, diag((0,0), 3)), 
 	(4, ligne((1,1), 2)),
 	(2, ligne((2,2), 2))]
-	h4 = Hexologic(sommes=s)
+	afficheSolution(timeSolve(s))
 	
-	# bonus 1: Un puzzle bien plus gros
+	print("--- bonus 1: Un puzzle bien plus gros")
 	# Oui, il y a 16 sommes à compléter, pour 20 cases
 	s = [(8, diag((2,0), 3)),
 	(2, diag((3,0), 2)),
@@ -57,7 +85,23 @@ def puzzlesMonde1():
 	(4, diag((0,4), 2)),
 	(3, ligne((0,2), 2)),
 	(5, diag((1,2), 3))]
-	hb = Hexologic(sommes=s)
+	afficheSolution(timeSolve(s))
+	
+	print("--- bonus 3: Un autre gros puzzle")
+	s = [(6, ligne((0,0), 2)),
+    (11, diag((1,0), 5)),
+    (3, diag((3,1), 2)),
+    (9, col((3,0), 4)),
+    (9, ligne((1,1), 4)),
+    (7, ligne((0,2), 6)),
+    (9, ligne((1,3), 4)),
+    (8, col((4,1), 4)),
+    (8, col((2,1), 4)),
+    (6, col((1,0), 4)),
+    (4, diag((0,2), 3)),
+    (4, diag((1,2), 2))]
+	afficheSolution(timeSolve(s))
+    
 
 def puzzlesMonde2():
 	"""
@@ -70,28 +114,28 @@ def puzzlesMonde2():
 	col = Hexologic.colonne
 	diag = Hexologic.diagonale
 	
-	# Puzzle num 16
+	print("--- Puzzle num 16")
 	s = [(7, diag((0,0), 2)),
 	(4, col((0,0), 2))]
 	f = [((1,1), 4)]
-	h16 = Hexologic(sommes=s, forces=f)
+	afficheSolution(timeSolve(s=s, f=f))
 	
-	# Puzzle 17
+	print("--- Puzzle 17")
 	s = [(5, diag((0,0), 2)),
 	(9, ligne((1,1), 3))]
 	f = [((2,1), 6)]
-	h17 = Hexologic(sommes=s, forces=f)
+	afficheSolution(timeSolve(s=s, f=f))
 	
-	# Puzzle 18
+	print("--- Puzzle 18")
 	s = [(4, diag((0,0), 2)),
 	(7, col((2,0), 2)),
 	(4, diag((2,1), 2)),
 	(8, col((1,1), 2))]
 	f = [((2,0), 4), 
 	((2,1), 6)]
-	h18 = Hexologic(sommes=s, forces=f)
+	afficheSolution(timeSolve(s=s, f=f))
 	
-	# Bonus 1 (19 sommes, 25 cases, 4 cases forcées)
+	print("--- Bonus 1 (19 sommes, 25 cases, 4 cases forcées)")
 	s = [(9, ligne((3,0), 3)),
 	(8, col((4, 0), 3)),
 	(3, col((5, 0), 2)),
@@ -115,7 +159,8 @@ def puzzlesMonde2():
 	((2,2), 5),
 	((7,2), 4),
 	((6,4), 4)]
-	hb1 = Hexologic(sommes=s, forces=f)
+	afficheSolution(timeSolve(s=s, f=f))
+
 
 def puzzlesMonde3():
 	"""
@@ -127,22 +172,22 @@ def puzzlesMonde3():
 	col = Hexologic.colonne
 	diag = Hexologic.diagonale
 	
-	# Puzzle 31
+	print("--- Puzzle 31")
 	s = [(2, [(0, 0)]),
 	(2, [(0, 3)]),
 	(2, [(3, 3)]),
 	(3, [(1, 2)])]
 	e = [[(0,0), (0,3), (3,3)]]
-	h31 = Hexologic(sommes=s, egals=e)
+	afficheSolution(timeSolve(s=s, e=e))
 	
-	# Puzzle 32
+	print("--- Puzzle 32")
 	s = [(4, ligne((0, 0), 2)),
 	(2, diag((1, 0), 2)),
 	(4, col((0, 0), 2))]
 	e = [[(0, 1), (2, 1)]]
-	h32 = Hexologic(sommes=s, egals=e)
+	afficheSolution(timeSolve(s=s, e=e))
 	
-	# Puzzle 33
+	print("--- Puzzle 33")
 	s = [(4, diag((1, 0), 2)),
 	(4, ligne((1, 1), 2)),
 	(4, col((1, 0), 2)),
@@ -151,9 +196,9 @@ def puzzlesMonde3():
 	(3, ligne((0, 3), 2)),
 	(4, diag((0, 2), 2))]
 	e = [[(1, 0), (5, 3), (0, 3)]]
-	h33 = Hexologic(sommes=s, egals=e)
+	afficheSolution(timeSolve(s=s, e=e))
 	
-	# Puzzle 34 (plusieurs groupes d'égalité)
+	print("--- Puzzle 34 (plusieurs groupes d'égalité)")
 	s = [(4, ligne((0, 0), 2)),
 	(5, diag((1, 0), 2)),
 	(5, col((2, 1), 2)),
@@ -163,46 +208,46 @@ def puzzlesMonde3():
 	e = [[(0, 0), (2, 2)],
 	[(1, 0), (1, 2)],
 	[(0, 1), (2, 1)]]
-	h34 = Hexologic(sommes=s, egals=e)
+	afficheSolution(timeSolve(s=s, e=e))
 	
-	# Bonus 1
+	print("--- Bonus 1")
 	s = [(13, ligne((0, 0), 7)),
 	(6, ligne((3, 2), 3))]
 	e = [[(0, 0), (3, 0), (4, 0), (3, 2)],
 	[(1, 0), (2, 0), (5, 0), (6, 0), (4, 2)]]
-	hb = Hexologic(sommes=s, egals=e)
+	afficheSolution(timeSolve(s=s, e=e))
 
 def puzzlesMonde4():
 	"""
-	Se monde mixe simplement les cases forcees et les cases egales
+	Ce monde mixe simplement les cases forcees et les cases egales
 	"""
 	ligne = Hexologic.ligne
 	col = Hexologic.colonne
 	diag = Hexologic.diagonale
 	
-	# Puzzle 46
+	print("--- Puzzle 46")
 	s = [(9, ligne((0, 0), 3))]
 	f = [((1, 0), 5)]
 	e = [[(0,0), (2,0)]]
-	h46 = Hexologic(sommes=s, forces=f, egals=e)
+	afficheSolution(timeSolve(s=s, f=f, e=e))
 	
-	# Puzzle 47
+	print("--- Puzzle 47")
 	s = [(5, diag((1, 0), 2)),
 	(8, ligne((0, 0), 3)),
 	(7, col((2, 0), 3))]
 	f = [((1, 0), 4)]
 	e = [[(2, 0), (2, 2)]]
-	h47 = Hexologic(sommes=s, forces=f, egals=e)
+	afficheSolution(timeSolve(s=s, f=f, e=e))
 	
-	# Puzzle 48
+	print("--- Puzzle 48")
 	s = [(9, diag((0, 0), 3)),
 	(4, ligne((0, 0), 2)),
-	(7, col((1, 0), 3))]
+	(7, ligne((1, 2), 2))]
 	f = [((2, 2), 5)]
 	e = [[(1, 0), (1, 2)]]
-	h48 = Hexologic(sommes=s, forces=f, egals=e)
+	afficheSolution(timeSolve(s=s, f=f, e=e))
 	
-	# Bonus 1 (16 sommes, 1 force, 1 groupe de 3 egals) 23 cases
+	print("--- Bonus 1 (16 sommes, 1 force, 1 groupe de 3 egals) 23 cases")
 	s = [(5, ligne((5, 0), 3)),
 	(5, diag((6, 0), 2)),
 	(4, col((7, 0), 2)),
@@ -221,9 +266,9 @@ def puzzlesMonde4():
 	(7, ligne((5, 1), 3))]
 	f = [((5, 3), 6)]
 	e = [[(5, 0), (0, 1), (4, 5)]]
-	hb = Hexologic(sommes=s, forces=f, egals=e)
+	afficheSolution(timeSolve(s=s, f=f, e=e))
 
-def puzzleMonde5():
+def puzzlesMonde5():
 	"""
 	Certaines cases contiennent la contrainte : <, > ou =, avec un ensemble de cases qui y sont accrochés
 	
@@ -240,21 +285,21 @@ def puzzleMonde5():
 	more='>'
 	eg='='
 	
-	# Puzzle 61
+	print("--- Puzzle 61")
 	c = [(((1,0), more), [(0,0)], [(2,0)]),
 	(((3,0), more), [(2,0)], [(4,0)])]
-	h61 = Hexologic(comps=c)
+	afficheSolution(timeSolve(c=c))
 	
-	# Puzzle 62
+	print("--- Puzzle 62")
 	s = [(3, col((0,2), 3))]
 	c = [(((3, 0), less), [(2,0)], [(4,0)]),
 	(((4, 1), more), [(4,2)], [(4,0)]),
 	(((3, 2), eg), ligne((0, 2), 3), [(4,2)]),
-	(((0, 3), more), [(0,4)], [0,2]),
+	(((0, 3), more), [(0,4)], [(0,2)]),
 	(((1, 4), eg), [(0,4)], ligne((2,4), 2))]
-	h62 = Hexologic(sommes=s, comps=c)
+	afficheSolution(timeSolve(s=s, c=c))
 
-	# Puzzle 63
+	print("--- Puzzle 63")
 	s = [(6, col((2,0), 5)),
 	(5, diag((2,0), 3)),
 	(6, diag((0,2), 3))]
@@ -262,7 +307,7 @@ def puzzleMonde5():
 	(((1, 2), eg), [(0,2)], [(2,2)]),
 	(((3, 2), more), [(2,2)], [(4,2)]),
 	(((2, 3), less), [(2,4)], [(2,2)])]
-	h63 = Hexologic(sommes=s, comps=c)
+	afficheSolution(timeSolve(s=s, c=c))
 	
 def main():
 	"""
@@ -281,8 +326,8 @@ def main():
 	# puzzlesMonde2()
 	# puzzlesMonde3()
 	# puzzlesMonde4()
-	
-	
-	
+	# puzzlesMonde5()
+
+
 if __name__ == "__main__":
     main()
