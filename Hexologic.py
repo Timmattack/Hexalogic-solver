@@ -1,4 +1,4 @@
-from constraint import Problem
+from constraint import Problem, AllEqualConstraint
 
 class Hexologic:
     MINVAL_CASE=1
@@ -28,15 +28,18 @@ class Hexologic:
     """
     sommes : liste de contrainte somme : (goal, [cases])
     forces : liste de contrainte force : (case, valeur)
+    egals : liste de constrainte egal : [cases] (les cases d'une même liste sont égales)
     """
     def __init__(self, sommes=None, forces=None):
         self.__sommes = sommes if sommes else []
         self.__forces = forces if forces else []
+        self.__egals = egals if egals else []
         
         self.__casesSommes = self.__getCasesSommes()
         self.__casesForces = self.__getCasesForces()
+        self.__casesEgals = self.__getCasesEgals()
         
-        self.__cases = set() | self.__casesSommes | self.__casesForces
+        self.__cases = set() | self.__casesSommes | self.__casesForces | self.__casesEgals
         
         self.__pb = Problem()
         
@@ -47,6 +50,8 @@ class Hexologic:
         
         self.__addCasesVariableForces()
         # Pas de contrainte sur forces : c'est déjà le domaine qui contraint
+        
+        self.__addEgalsConstraint()
     
     ### Sommes
     def __getCasesSommes(self):
@@ -74,6 +79,13 @@ class Hexologic:
     def __addCasesVariableForces(self):
         for force in self.__forces:
             self.__pb.addVariable(force[0], [force[1]])
+    
+    ### Egals
+    def __getCasesEgals(self):
+        return {case for egal in egals for case in egal}
+    def __addEgalsConstraint(self):
+        for egal in self.__egals:
+            self.__pb.addConstraint(AllEqualConstraint(), egal)
     
     
     def getNbCases(self):

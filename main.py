@@ -34,7 +34,7 @@ def afficheSolution(res):
         print()
 
 def timeSolve(s=None, f=None, e=None, c=None):
-    h = Hexologic(sommes=s, forces=f)#, egals=e#, comps=c)
+    h = Hexologic(sommes=s, forces=f, egals=e)#, comps=c)
     start = timer()
     print(f"debut recherche : {h.getNbCases()} cases pour ce puzzle")
     res = h.solve()
@@ -324,7 +324,7 @@ def main():
 	"""
 	puzzlesMonde1()
 	puzzlesMonde2()
-	# puzzlesMonde3()
+	puzzlesMonde3()
 	# puzzlesMonde4()
 	# puzzlesMonde5()
 
