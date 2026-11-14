@@ -27,23 +27,34 @@ class Hexologic:
     ###              ###
     """
     sommes : liste de contrainte somme : (goal, [cases])
+    forces : liste de contrainte force : (case, valeur)
     """
-    def __init__(self, sommes=None):
+    def __init__(self, sommes=None, forces=None):
         self.__sommes = sommes if sommes else []
+        self.__forces = forces if forces else []
         
-        self.__cases = set()
-        self.addCasesSommes()
+        self.__casesSommes = self.__getCasesSommes()
+        self.__casesForces = self.__getCasesForces()
+        
+        self.__cases = set() | self.__casesSommes | self.__casesForces
         
         self.__pb = Problem()
         
+        # Toutes les variables on pour domaine [MINVAL_CASE, MAXVAL_CASE]
+        # SAUF les cases contraintes par forces
         self.__addCasesVariables()
         self.__addSommesConstraint()
+        
+        self.__addCasesVariableForces()
+        # Pas de contrainte sur forces : c'est déjà le domaine qui contraint
     
-    def addCasesSommes(self):
-        self.__cases = self.__cases | {case for somme in self.__sommes for case in somme[1]}
+    ### Sommes
+    def __getCasesSommes(self):
+        return {case for somme in self.__sommes for case in somme[1]}
     
     def __addCasesVariables(self):
-        self.__pb.addVariables(self.__cases, range(Hexologic.MINVAL_CASE, Hexologic.MAXVAL_CASE+1))
+        self.__pb.addVariables(self.__casesSommes - self.__casesForces, range(Hexologic.MINVAL_CASE, Hexologic.MAXVAL_CASE+1))
+    
     @staticmethod
     def FUNestSommeValide(goal):
         def estSommeValide(*args):
@@ -55,6 +66,15 @@ class Hexologic:
     def __addSommesConstraint(self):
         for somme in self.__sommes:
             self.__addSommeConstraint(somme)
+    
+    ### Forces
+    def __getCasesForces(self):
+        return {force[0] for force in self.__forces}
+    
+    def __addCasesVariableForces(self):
+        for force in self.__forces:
+            self.__pb.addVariable(force[0], [force[1]])
+    
     
     def getNbCases(self):
         return len(self.__cases)
