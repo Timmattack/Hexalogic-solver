@@ -1,3 +1,4 @@
+from constraint import Problem
 
 class Hexologic:
     MINVAL_CASE=1
@@ -23,7 +24,7 @@ class Hexologic:
     
     
     def __init__(self, sommes=None):
-        ...
+        
     
     
     def solve():
