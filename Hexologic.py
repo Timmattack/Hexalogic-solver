@@ -49,7 +49,7 @@ class Hexologic:
         self.__VarEgals = self.__getVarEgals()
         self.__VarComps = self.__getVarComps() # Des cases peuvent avoir un domaine différent
         self.__VarComparator = self.__getVarComparator() # Domaine forcé, différent du défaut
-        self.__VarSommesInput = self.__getVarSommesInput() 
+        self.__VarSommesInput = self.__getVarSommesInput()
         self.__VarSommesOutput = self.__getVarSommesOutput() # Domaine dépendant des inputs
         
         # On enregistre les sets qui auront un domaine restreints dont on s'occupe à part
