@@ -407,7 +407,7 @@ def main():
 	puzzlesMonde3()
 	puzzlesMonde4()
 	puzzlesMonde5()
-	# puzzlesMonde6()
+	puzzlesMonde6()
 
 if __name__ == "__main__":
     main()

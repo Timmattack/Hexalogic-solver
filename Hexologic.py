@@ -218,7 +218,10 @@ class Hexologic:
     def solve(self):
         
         res = self.__pb.getSolution()
+        if not res:
+            return {}
+        
         # La solution contient aussi des variables 'inutiles':
         # - Les variables qui servent à la comparaison 'ciG' et 'ciD' : filtrons les
         trueRes = {k: res[k] for k in res if isinstance(k, tuple)}
-        return trueRes if trueRes else {}
+        return trueRes
