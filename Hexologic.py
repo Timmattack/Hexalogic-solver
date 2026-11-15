@@ -83,7 +83,7 @@ class Hexologic:
         self.__addCompsConstraint()
         
         self.__addVariablesSommesOutput()
-        self.__addSommesConstraint()
+        self.__addCasesSommesConstraint()
     
     
     def __setToRestrictedDomain(self, *sets):

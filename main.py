@@ -384,8 +384,8 @@ def puzzlesMonde6():
 		(4, ligne((2,2), 2)),
 		(3, diag((2,3), 2)),
 		(7, col((2,2), 3))]
-	cs = [([(0,0),(4,0),(2,2),(2,4)],    [(1,1),(3,2)]), # groupe rose
-		([(4,1),(5,3)],    [(1,1),(7,2)])] # groupe orange
+	cs = [ ([(0,0),(4,0),(2,2),(2,4)],    [(1,1),(3,2)]), # groupe rose
+		([(4,1),(5,3)],    [(1,1),(7,2)]) ] # groupe orange
 	afficheSolution(timeSolve(s=s, cs=cs))
 
 
