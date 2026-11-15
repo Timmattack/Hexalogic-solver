@@ -69,10 +69,8 @@ class Hexologic:
         self.__pb = Problem()
         
         # Toutes les variables on pour domaine [MINVAL_CASE, MAXVAL_CASE]
-        # SAUF les cases contraintes par forces,
-        # les cases comparateur,
-        # et les cases sommesOutput
-        self.__addVariablesSommes()
+        # SAUF celles qui ont un domaine restreint (forces, comparateur, sommesOutput)
+        self.__addVariablesNonRestricted()
         self.__addSommesConstraint()
         
         self.__addVariableForces()
@@ -80,9 +78,6 @@ class Hexologic:
         
         self.__addEgalsConstraint()
         
-        # Toutes les variables qui ne sont pas set par:
-        # sommes, forces, sommesOutput
-        self.__addVariablesComps()
         # Les cases comparateur sont à 0
         self.__addVariablesComparator()
         self.__addCompsConstraint()
@@ -98,14 +93,14 @@ class Hexologic:
     def __getRestrictedVar(self):
         return self.__VarRestricted
     
+    def __addVariablesNonRestricted(self):
+        self.__pb.addVariables(self.__cases - self.__getRestrictedVar(),
+            range(Hexologic.MINVAL_CASE, Hexologic.MAXVAL_CASE+1))
+    
     ##########
     ### Sommes
     def __getVarSommes(self):
         return {case for somme in self.__sommes for case in somme[1]}
-    
-    def __addVariablesSommes(self):
-        self.__pb.addVariables(self.__VarSommes - self.__getRestrictedVar(), 
-            range(Hexologic.MINVAL_CASE, Hexologic.MAXVAL_CASE+1))
     
     @staticmethod
     def FUNestSommeValide(goal):
@@ -144,10 +139,6 @@ class Hexologic:
     
     def __getVarComparator(self):
         return {comp[0][0] for comp in self.__comps}
-    
-    def __addVariablesComps(self):
-        self.__pb.addVariables(self.__VarComps - self.__getRestrictedVar()-self.__VarSommes,
-            range(Hexologic.MINVAL_CASE, Hexologic.MAXVAL_CASE+1))
     
     def __addVariablesComparator(self):
         self.__pb.addVariables(self.__VarComparator, [0])
